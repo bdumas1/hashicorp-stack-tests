@@ -1,0 +1,23 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+Vagrant.configure(2) do |config|
+  config.vm.box = "bento/ubuntu-18.04" # 18.04 LTS
+  config.vm.hostname = "DevServer"
+  config.vm.network :private_network, ip: "172.16.0.2"
+  # config.vm.provision "file", source: "../../nomad/nomadConf.hcl", destination: "$HOME/temp/nomadConf.hcl"
+  config.vm.provision "shell", path: "../init.sh", privileged: false
+  config.vm.provision "shell" do |s|
+    s.path = "./execNomadDev.sh"
+    s.args = "172.16.0.2"
+    s.privileged = true
+  end
+  config.vm.provision "shell" do |s|
+    s.path = "./execConsulDev.sh"
+    s.args = "172.16.0.2"
+    s.privileged = true
+  end
+  config.vm.provider :virtualbox do |vb|
+    vb.customize ["modifyvm", :id, "--memory", 2048]
+    vb.customize ["modifyvm", :id, "--cpus", 2]
+  end
+end
