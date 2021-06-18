@@ -19,3 +19,5 @@ WantedBy=multi-user.target" > /etc/systemd/system/nomad.service
 
 systemctl enable nomad.service
 systemctl start nomad
+
+export NOMAD_ADDR=http://${IP}:4646

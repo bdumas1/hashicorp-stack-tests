@@ -11,6 +11,13 @@ job "mysql" {
       mode = "delay"
     }
 
+    network {
+      port "mysql" {
+        static = 3306
+      }
+      mode = "bridge"
+    }
+
     task "mysql" {
       driver = "docker"
 
@@ -20,36 +27,29 @@ job "mysql" {
 
       config {
         image = "mysql"
-        
-        port_map {
-          http = 3306
-        }
-      }
-
-      service {
-        name = "mysql"
-        port = "mysql"
-
-        check {
-          name = "mysql alive"
-          type = "tcp"
-          interval = "10s"
-          timeout = "2s"
-        }
+        ports = ["mysql"]
       }
 
       resources {
         cpu = 500
-        memory = 1024
-
-        network {
-          mbits = 10
-
-          port "mysql" {
-            static = 3306
-          }
-        }
+        memory = 512
       }
     }
+
+    service {
+        name = "mysql"
+        port = "mysql"
+
+        connect {
+          sidecar_service {}
+        }
+
+        // check {
+        //   name = "mysql alive"
+        //   type = "tcp"
+        //   interval = "10s"
+        //   timeout = "2s"
+        // }
+      }
   }
 }

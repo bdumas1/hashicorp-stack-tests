@@ -11,50 +11,57 @@ job "wordpress" {
       mode     = "delay"
     }
 
+    network {
+      port "http" {
+        static = 80
+      }
+      mode = "bridge"
+    }
+
     task "wordpress" {
       driver = "docker"
 
       config {
         image = "wordpress"
-
-        port_map {
-          http = 80
-        }
+        ports = ["http"]
       }
 
       env {
-        WORDPRESS_DB_HOST     = "172.16.0.2:3306"
+        WORDPRESS_DB_HOST     = "${NOMAD_UPSTREAM_ADDR_mysql}"
         WORDPRESS_DB_NAME     = "wordpress"
         WORDPRESS_DB_USER     = "root"
         WORDPRESS_DB_PASSWORD = "password"
       }
 
-      service {
-        name = "wordpress"
-        tags = ["global"]
-        port = "http"
+      resources {
+        cpu = 500 # Mhz
+        memory = 1024 # MB
+      }
+    }
 
-        check {
-          name     = "wordpress running on port 80"
-          type     = "http"
-          protocol = "http"
-          path     = "/"
-          interval = "10s"
-          timeout  = "2s"
+    service {
+      name = "wordpress"
+      tags = ["global"]
+      port = "http"
+
+      connect {
+        sidecar_service {
+          proxy {
+            upstreams {
+              destination_name  = "mysql"
+              local_bind_port   = 3306
+            }
+          }
         }
       }
 
-      resources {
-        cpu = 500 # Mhz
-        memory = 512 # MB
-
-        network {
-          mbits = 10
-
-          port "http" {
-            static = 80
-          }
-        }
+      check {
+        name     = "wordpress running on port 80"
+        type     = "http"
+        protocol = "http"
+        path     = "/"
+        interval = "10s"
+        timeout  = "2s"
       }
     }
   }
