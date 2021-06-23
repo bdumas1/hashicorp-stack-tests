@@ -18,7 +18,8 @@ ExecStart=/usr/local/bin/consul agent \
   -server \
   -bootstrap-expect=1 \
   -advertise=$IP \
-  -encrypt=TeLbPpWX41zMM3vfLwHHfQ==
+  -encrypt=TeLbPpWX41zMM3vfLwHHfQ== \
+  -data-dir=/var/lib/consul
 
 ExecReload=/bin/kill -HUP $MAINPID
 
