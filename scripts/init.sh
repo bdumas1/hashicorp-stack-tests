@@ -1,4 +1,6 @@
-echo "Installing Docker..."
+#!/bin/bash
+
+echo "########## Installing Docker..."
 sudo apt-get update
 sudo apt-get remove docker docker-engine docker.io
 echo '* libraries/restart-without-asking boolean true' | sudo debconf-set-selections
@@ -20,7 +22,7 @@ sudo docker --version
 # Packages required for nomad & consul
 sudo apt-get install unzip curl vim -y
 
-echo "Installing Nomad..."
+echo "########## Installing Nomad..."
 NOMAD_VERSION=1.0.1
 cd /tmp/
 curl -sSL https://releases.hashicorp.com/nomad/${NOMAD_VERSION}/nomad_${NOMAD_VERSION}_linux_amd64.zip -o nomad.zip
@@ -30,7 +32,7 @@ sudo mkdir -p /etc/nomad.d
 sudo chmod a+w /etc/nomad.d
 
 
-echo "Installing Consul..."
+echo "########## Installing Consul..."
 CONSUL_VERSION=1.9.0
 curl -sSL https://releases.hashicorp.com/consul/${CONSUL_VERSION}/consul_${CONSUL_VERSION}_linux_amd64.zip > consul.zip
 unzip consul.zip
@@ -38,3 +40,9 @@ sudo mv consul /usr/local/bin/
 sudo mkdir -p /var/lib/consul
 sudo chmod -R 775 /var/lib/consul
 sudo mkdir /etc/consul.d
+
+# https://discuss.hashicorp.com/t/failed-to-find-plugin-bridge-in-path/3095
+echo "########## Enable CNI Plugin"
+curl -L -o cni-plugins.tgz https://github.com/containernetworking/plugins/releases/download/v0.8.1/cni-plugins-linux-amd64-v0.8.1.tgz
+sudo mkdir -p /opt/cni/bin
+sudo tar -C /opt/cni/bin -xzf cni-plugins.tgz

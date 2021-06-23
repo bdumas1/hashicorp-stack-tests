@@ -1,5 +1,4 @@
-DEFAULT_IP=172.17.0.2
-
+DEFAULT_IP=172.16.0.2
 IP="${1:-$DEFAULT_IP}"
 
 echo "[Unit]
@@ -11,6 +10,7 @@ Wants=network-online.target
 [Service]
 Restart=on-failure
 ExecStart=/usr/local/bin/consul agent \
+  -config-file=/home/vagrant/consul-server.hcl \
   -node=$IP \
   -bind=$IP \
   -client=0.0.0.0 \
@@ -18,7 +18,6 @@ ExecStart=/usr/local/bin/consul agent \
   -server \
   -bootstrap-expect=1 \
   -advertise=$IP \
-  -data-dir=/var/lib/consul \
   -encrypt=TeLbPpWX41zMM3vfLwHHfQ==
 
 ExecReload=/bin/kill -HUP $MAINPID

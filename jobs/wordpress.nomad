@@ -35,7 +35,7 @@ job "wordpress" {
 
       resources {
         cpu = 500 # Mhz
-        memory = 1024 # MB
+        memory = 512 # MB
       }
     }
 
