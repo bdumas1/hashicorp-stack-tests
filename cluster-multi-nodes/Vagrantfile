@@ -39,8 +39,11 @@ Vagrant.configure("2") do |config|
       node.vm.network :private_network, ip: machine[:ip]
       node.vm.network "forwarded_port", guest: 22, host: machine[:ssh_port], id: "ssh"
 
-      node.vm.provision "file", source: "../scripts/conf/consul-server.hcl", destination: "$HOME/consul-server.hcl"
-      node.vm.provision "file", source: "../scripts/conf/consul-client.hcl", destination: "$HOME/consul-client.hcl"
+      if machine[:server]
+        node.vm.provision "file", source: "../scripts/conf/consul-server.hcl", destination: "$HOME/consul-server.hcl"
+      else
+        node.vm.provision "file", source: "../scripts/conf/consul-client.hcl", destination: "$HOME/consul-client.hcl"
+      end
 
       node.vm.provision "shell", path: "../scripts/init.sh", privileged: false
 
