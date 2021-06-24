@@ -4,6 +4,23 @@ This Vagrant configuration deploys **3 virtual machines** called **nodes** conta
 - **Nomad** in client and server mode
 - **Consul** in client and server mode
 
+To run
+
+```shell-session
+$ vagrant up
+```
+
+To destroy
+
+```shell-session
+$ vagrant destroy -f
+```
+
+## UI
+
+- **Nomad** :  [http://172.16.0.2:4646](http://172.16.0.2:4646)
+- **Consul** : [http://172.16.0.2:8500](http://172.16.0.2:8500)
+
 ## Example
 
 You can run a nomad job in any server of nodes. For example here, an `nginx` nomad job is run with the aim of deploying **3 instances** or **allocations** on the `ClientServer1` node (but it could also have been `ClientServer2` or `ClientServer2`, the most important thing is that it's deployed on a **Nomad server**).
