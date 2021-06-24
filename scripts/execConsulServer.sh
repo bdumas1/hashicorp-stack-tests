@@ -1,6 +1,14 @@
 DEFAULT_IP=172.16.0.2
 IP="${1:-$DEFAULT_IP}"
 
+cat > /etc/consul.d/config.hcl <<EOF
+data_dir = /var/lib/consul
+
+connect {
+  enabled = true
+}
+EOF
+
 echo "[Unit]
 Description=Consul Service Discovery Agent
 Documentation=https://www.consul.io/
@@ -10,7 +18,7 @@ Wants=network-online.target
 [Service]
 Restart=on-failure
 ExecStart=/usr/local/bin/consul agent \
-  -config-file=/home/vagrant/consul-server.hcl \
+  -config-dir=/etc/consul.d \
   -node=$IP \
   -bind=$IP \
   -client=0.0.0.0 \
@@ -18,8 +26,7 @@ ExecStart=/usr/local/bin/consul agent \
   -server \
   -bootstrap-expect=1 \
   -advertise=$IP \
-  -encrypt=TeLbPpWX41zMM3vfLwHHfQ== \
-  -data-dir=/var/lib/consul
+  -encrypt=TeLbPpWX41zMM3vfLwHHfQ==
 
 ExecReload=/bin/kill -HUP $MAINPID
 

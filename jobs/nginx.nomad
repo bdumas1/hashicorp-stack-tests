@@ -2,7 +2,7 @@ job "nginx" {
   datacenters = ["dc1"]
 
   group "nginx" {
-    count = 1
+    count = 3
 
     restart {
       interval = "5m"

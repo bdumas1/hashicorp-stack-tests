@@ -1,16 +1,18 @@
-This Vagrant configuration deploys a cluster multi nodes with always **one server** and **one or many clients**.
+# Cluster multi nodes
+
+This Vagrant configuration deploys a cluster multi nodes with **one server** and **one or many clients**.
 
 The server contains :
 - Docker
 - Nomad Server
 - Consul Server
-- **Consul Connect** enabled in a configuration file (`scripts/conf/consul-server.conf`)
+- Consul Connect
 
 The clients contains :
 - Docker
 - Nomad Client
 - Consul Client
-- **gRPC** port opened for **Consul Connect** in a configuration file (`scripts/conf/consul-client.conf`)
+- **gRPC** port opened for Consul Connect
 
 # Run
 
