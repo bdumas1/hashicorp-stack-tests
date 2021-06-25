@@ -1,0 +1,34 @@
+{
+  "variables": {
+    "flatcar_channel": "stable",
+    "flatcar_version": "2765.2.6",
+    "disk_size": "40000",
+    "memory": "2048",
+    "boot_wait": "25s",
+    "headless": "false",
+    "core_user_password": "packer"
+  },
+  "builders": [
+    {
+      "type": "virtualbox-iso",
+      "guest_os_type": "Linux_64",
+      "iso_url": "https://{{ user `flatcar_channel` }}.release.flatcar-linux.net/amd64-usr/{{ user `flatcar_version` }}/flatcar_production_iso_image.iso",
+      "iso_checksum": "file:https://{{ user `flatcar_channel` }}.release.flatcar-linux.net/amd64-usr/{{ user `flatcar_version` }}/flatcar_production_iso_image.iso.DIGESTS",
+      "output_directory": "builds",
+      "shutdown_command": "sudo shutdown now",
+      "disk_size": "{{ user `disk_size` }}",
+      "memory": "{{ user `memory` }}",
+      "boot_wait": "{{ user `boot_wait` }}",
+      "ssh_username": "core",
+      "ssh_password": "{{ user `core_user_password` }}",
+      "headless": "{{ user `headless` }}",
+      "boot_command": [
+        "sudo -i <enter>",
+        "passwd core<enter><wait>",
+        "{{ user `core_user_password` }}<enter>",
+        "{{ user `core_user_password` }}<enter>",
+        "systemctl start sshd.service<enter>"
+      ]
+    }
+  ]
+}
