@@ -1,6 +1,8 @@
 DEFAULT_IP=172.16.0.2
 IP="${1:-$DEFAULT_IP}"
 
+mkdir -p /etc/consul.d
+
 cat > /etc/consul.d/config.hcl <<EOF
 data_dir = "/var/lib/consul"
 
@@ -17,7 +19,7 @@ Wants=network-online.target
 
 [Service]
 Restart=on-failure
-ExecStart=/usr/local/bin/consul agent \
+ExecStart=/opt/bin/consul agent \
   -config-dir=/etc/consul.d \
   -node=$IP \
   -bind=$IP \

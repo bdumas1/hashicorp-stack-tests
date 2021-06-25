@@ -1,22 +1,28 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
+
+# The VMs are using the Flatcar distribution provided by : https://github.com/obourdon/flatcar-packer-vbox
+
 Vagrant.configure("2") do |config|
   servers=[
     {
       :hostname => "ClientServer1",
-      :box => "bento/ubuntu-18.04",
+      :box => "obourdon/flatcar-linux-observability",
+      :box_version => "2765.2.6",
       :ip => "172.16.0.2",
       :ssh_port => '2200',
     },
     {
       :hostname => "ClientServer2",
-      :box => "bento/ubuntu-18.04",
+      :box => "obourdon/flatcar-linux-observability",
+      :box_version => "2765.2.6",
       :ip => "172.16.0.3",
       :ssh_port => '2201',
     },
     {
       :hostname => "ClientServer3",
-      :box => "bento/ubuntu-18.04",
+      :box => "obourdon/flatcar-linux-observability",
+      :box_version => "2765.2.6",
       :ip => "172.16.0.4",
       :ssh_port => '2202',
     },
@@ -25,11 +31,10 @@ Vagrant.configure("2") do |config|
   servers.each do |machine|
     config.vm.define machine[:hostname] do |node|
       node.vm.box = machine[:box]
+      node.vm.box_version = machine[:box_version]
       node.vm.hostname = machine[:hostname]
       node.vm.network :private_network, ip: machine[:ip]
       node.vm.network "forwarded_port", guest: 22, host: machine[:ssh_port], id: "ssh"
-
-      node.vm.provision "shell", path: "../scripts/init.sh", privileged: false
 
       node.vm.provision "shell" do |s|
         s.path = "./execNomadClientServer.sh"
@@ -43,7 +48,7 @@ Vagrant.configure("2") do |config|
         s.privileged = true
       end
 
-      node.vm.synced_folder "../jobs/", "/jobs"
+      # node.vm.synced_folder "../jobs/", "/jobs"
 
       node.vm.provider :virtualbox do |vb|
         vb.customize ["modifyvm", :id, "--memory", 1024]
