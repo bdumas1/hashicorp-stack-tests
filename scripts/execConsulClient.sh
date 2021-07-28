@@ -5,7 +5,7 @@ IP="${1:-$DEFAULT_IP}"
 SERVER_IP="${2:-DEFAULT_SERVER_IP}"
 
 cat > /etc/consul.d/config.hcl <<EOF
-data_dir = /var/lib/consul
+data_dir = "/var/lib/consul"
 
 ports {  
   grpc = 8502
