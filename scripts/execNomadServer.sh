@@ -9,7 +9,6 @@ data_dir  = "/var/lib/nomad"
 bind_addr = "0.0.0.0" # the default
 
 advertise {
-  # Defaults to the first private IP address.
   http = "${IP}"
   rpc  = "${IP}"
   serf = "${IP}"
@@ -20,9 +19,10 @@ server {
   bootstrap_expect = 1
 }
 
-#client {
-#  enabled       = true
-#}
+client {
+  enabled    = true
+  node_class = "nserver"
+}
 
 plugin "raw_exec" {
   config {
