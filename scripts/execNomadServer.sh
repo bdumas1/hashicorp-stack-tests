@@ -3,6 +3,11 @@
 DEFAULT_IP=172.16.0.2
 IP="${1:-$DEFAULT_IP}"
 
+TAG="odd"
+if [ $(($(echo ${IP} | awk -F. '{print x,$NF}')%2)) -eq 0 ]; then
+	TAG="even"
+fi
+
 cat >/etc/nomad.d/nomad-server.hcl <<EOF
 data_dir  = "/var/lib/nomad"
 
@@ -22,6 +27,11 @@ server {
 client {
   enabled    = true
   node_class = "nserver"
+
+  meta {
+    type = "server"
+    tag  = "${TAG}"
+  }
 }
 
 plugin "raw_exec" {
