@@ -25,7 +25,7 @@ sudo docker --version
 sudo apt-get install unzip curl vim -y
 
 echo "########## Installing Nomad..."
-NOMAD_VERSION=1.1.2
+NOMAD_VERSION=1.1.3
 cd /tmp/
 curl -sSL https://releases.hashicorp.com/nomad/${NOMAD_VERSION}/nomad_${NOMAD_VERSION}_linux_amd64.zip -o nomad.zip
 sudo unzip -q nomad.zip -d /usr/local/bin/
