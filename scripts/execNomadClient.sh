@@ -11,9 +11,16 @@ data_dir  = "/var/lib/nomad"
 
 bind_addr = "0.0.0.0" # the default
 
+advertise {
+  http = "${IP}"
+  rpc  = "${IP}"
+  serf = "${IP}"
+}
+
 client {
-  enabled = true
-  servers = ["${SERVER_IP}"]
+  enabled    = true
+  servers    = ["${SERVER_IP}"]
+  node_class = "nclient"
 }
 
 plugin "raw_exec" {
