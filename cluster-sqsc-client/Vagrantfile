@@ -6,21 +6,21 @@
 Vagrant.configure("2") do |config|
   servers=[
     {
-      :hostname => "ClientServer1",
+      :hostname => "Node1",
       :box => "obourdon/flatcar-linux-observability",
       :box_version => "2765.2.6",
       :ip => "172.16.0.2",
       :ssh_port => '2200',
     },
     {
-      :hostname => "ClientServer2",
+      :hostname => "Node2",
       :box => "obourdon/flatcar-linux-observability",
       :box_version => "2765.2.6",
       :ip => "172.16.0.3",
       :ssh_port => '2201',
     },
     {
-      :hostname => "ClientServer3",
+      :hostname => "Node3",
       :box => "obourdon/flatcar-linux-observability",
       :box_version => "2765.2.6",
       :ip => "172.16.0.4",
