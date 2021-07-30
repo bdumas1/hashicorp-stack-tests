@@ -3,35 +3,42 @@ IP="${1:-$DEFAULT_IP}"
 
 mkdir -p /etc/consul.d
 
-cat > /etc/consul.d/config.hcl <<EOF
+cat >/etc/consul.d/config.hcl <<EOF
 data_dir = "/var/lib/consul"
 
-server = true
-retry_join = [ "172.16.0.2", "172.16.0.3", "172.16.0.4" ]
-bootstrap_expect = 3
+connect {
+  enabled = true
+}
 EOF
 
-echo "[Unit]
+if [ "${IP}" != "${DEFAULT_IP}" ]; then
+	cat >/etc/consul.d/server_join.hcl <<EOF
+retry_join = ["${DEFAULT_IP}"]
+EOF
+fi
+
+cat >/etc/systemd/system/consul.service <<EOF
+[Unit]
 Description=Consul Service Discovery Agent
 Documentation=https://www.consul.io/
 After=network-online.target
 Wants=network-online.target
 
 [Service]
-Restart=on-failure
 ExecStart=/opt/bin/consul agent \
   -config-dir=/etc/consul.d \
-  -node=$IP \
-  -bind=$IP \
   -client=0.0.0.0 \
   -ui \
+  -server \
+  -bootstrap-expect=3 \
   -advertise=$IP \
   -encrypt=TeLbPpWX41zMM3vfLwHHfQ==
-
 ExecReload=/bin/kill -HUP $MAINPID
+Restart=on-failure
 
 [Install]
-WantedBy=multi-user.target" > /etc/systemd/system/consul.service
+WantedBy=multi-user.target
+EOF
 
 systemctl enable consul.service
 systemctl start consul
