@@ -7,6 +7,10 @@ SERVER_IP="${2:-DEFAULT_SERVER_IP}"
 cat >/etc/consul.d/config.hcl <<EOF
 data_dir = "/var/lib/consul"
 
+client_addr    = "0.0.0.0"
+advertise_addr = "${IP}"
+retry_join     = [ "${SERVER_IP}" ]
+
 ports {  
   grpc = 8502
 }
@@ -22,9 +26,6 @@ Wants=network-online.target
 [Service]
 ExecStart=/usr/local/bin/consul agent \
   -config-dir=/etc/consul.d \
-  -client=0.0.0.0 \
-  -advertise=$IP \
-  -retry-join=$SERVER_IP \
   -encrypt=TeLbPpWX41zMM3vfLwHHfQ==
 ExecReload=/bin/kill -HUP $MAINPID
 Restart=on-failure

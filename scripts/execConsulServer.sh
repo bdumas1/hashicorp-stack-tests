@@ -4,6 +4,15 @@ IP="${1:-$DEFAULT_IP}"
 cat >/etc/consul.d/config.hcl <<EOF
 data_dir = "/var/lib/consul"
 
+client_addr      = "0.0.0.0"
+advertise_addr   = "${IP}"
+server           = true
+bootstrap_expect = 1
+
+ui_config {
+  enabled = true
+}
+
 connect {
   enabled = true
 }
@@ -19,11 +28,6 @@ Wants=network-online.target
 [Service]
 ExecStart=/usr/local/bin/consul agent \
   -config-dir=/etc/consul.d \
-  -client=0.0.0.0 \
-  -ui \
-  -server \
-  -bootstrap-expect=1 \
-  -advertise=$IP \
   -encrypt=TeLbPpWX41zMM3vfLwHHfQ==
 ExecReload=/bin/kill -HUP $MAINPID
 Restart=on-failure
