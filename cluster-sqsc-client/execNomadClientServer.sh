@@ -8,6 +8,14 @@ mkdir -p /etc/nomad.d
 cat > /etc/nomad.d/config.hcl <<EOF
 data_dir = "/var/lib/nomad"
 
+bind_addr = "0.0.0.0" # the default
+
+advertise {
+  http = "${IP}"
+  rpc  = "${IP}"
+  serf = "${IP}"
+}
+
 server {
   enabled = true
   bootstrap_expect = 3
@@ -18,11 +26,19 @@ server {
 }
 
 client {
-  enabled = true
+  enabled    = true
+  node_class = "nnodes"
 }
+
+#plugin "raw_exec" {
+#  config {
+#    enabled = true
+#  }
+#}
 EOF
 
-echo "[Unit]
+cat >/etc/systemd/system/nomad.service <<EOF
+[Unit]
 Description=Nomad Service Discovery Agent
 Documentation=https://www.nomad.io/
 After=network-online.target
@@ -31,17 +47,22 @@ Wants=network-online.target
 [Service]
 ExecStart=/opt/bin/nomad agent \
   -config=/etc/nomad.d \
-  -node=$IP \
-  -bind=$IP \
   -encrypt=TeLbPpWX41zMM3vfLwHHfQ==
-
 ExecReload=/bin/kill -HUP $MAINPID
 Restart=on-failure
 
 [Install]
-WantedBy=multi-user.target" > /etc/systemd/system/nomad.service
+WantedBy=multi-user.target
+EOF
 
 systemctl enable nomad.service
 systemctl start nomad
 
-# echo "export NOMAD_ADDR=http://$IP:4646" >> /home/core/.bashrc
+# Because of the way /etc/provile script is written,
+# putting extra environment variables into /etc/profile.env
+# prevents former PATH to also contain /opt/bin, therefore,
+# it needs to be re-inserted there :-(
+cat >>/etc/profile.env <<EOF
+export NOMAD_ADDR=http://${IP}:4646
+export ROOTPATH='/opt/bin'
+EOF
