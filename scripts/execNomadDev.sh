@@ -3,7 +3,7 @@ IP="${1:-$DEFAULT_IP}"
 
 cat >/etc/systemd/system/nomad.service <<EOF
 [Unit]
-Description=Nomad Service Discovery Agent
+Description=Nomad Scheduler Agent (dev mode)
 Documentation=https://www.nomad.io/
 After=network-online.target
 Wants=network-online.target

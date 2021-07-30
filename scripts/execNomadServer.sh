@@ -43,7 +43,7 @@ EOF
 
 cat >/etc/systemd/system/nomad.service <<EOF
 [Unit]
-Description=Nomad Service Discovery Agent
+Description=Nomad Scheduler Agent
 Documentation=https://www.nomad.io/
 After=network-online.target
 Wants=network-online.target
