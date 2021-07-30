@@ -3,6 +3,11 @@
 DEFAULT_IP=172.16.0.2
 IP="${1:-$DEFAULT_IP}"
 
+TAG="odd"
+if [ $(($(echo ${IP} | awk -F. '{print x,$NF}')%2)) -eq 0 ]; then
+	TAG="even"
+fi
+
 mkdir -p /etc/nomad.d
 
 cat > /etc/nomad.d/config.hcl <<EOF
@@ -28,13 +33,18 @@ server {
 client {
   enabled    = true
   node_class = "nnodes"
+
+  meta {
+    type = "client-server"
+    tag  = "${TAG}"
+  }
 }
 
-#plugin "raw_exec" {
-#  config {
-#    enabled = true
-#  }
-#}
+plugin "raw_exec" {
+  config {
+    enabled = true
+  }
+}
 EOF
 
 cat >/etc/systemd/system/nomad.service <<EOF
