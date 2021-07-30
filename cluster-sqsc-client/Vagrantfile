@@ -36,6 +36,13 @@ Vagrant.configure("2") do |config|
       node.vm.network :private_network, ip: machine[:ip]
       node.vm.network "forwarded_port", guest: 22, host: machine[:ssh_port], id: "ssh"
 
+      if machine.has_key?(:server) and machine[:server]
+         # Expose the nomad api and ui to the host
+         node.vm.network "forwarded_port", guest: 4646, host: 4646
+         # consul
+         node.vm.network "forwarded_port", guest: 8500, host: 8500
+      end
+
       node.vm.provision "shell" do |s|
         s.path = "./execConsulClientServer.sh"
         s.args = machine[:server] ? [machine[:ip]] : [machine[:ip], "172.16.0.2"]
