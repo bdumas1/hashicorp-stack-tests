@@ -6,16 +6,12 @@ mkdir -p /etc/consul.d
 cat >/etc/consul.d/config.hcl <<EOF
 data_dir = "/var/lib/consul"
 
+retry_join = [ "172.16.0.2", "172.16.0.3", "172.16.0.4" ]
+
 connect {
   enabled = true
 }
 EOF
-
-if [ "${IP}" != "${DEFAULT_IP}" ]; then
-	cat >/etc/consul.d/server_join.hcl <<EOF
-retry_join = ["${DEFAULT_IP}"]
-EOF
-fi
 
 cat >/etc/systemd/system/consul.service <<EOF
 [Unit]
