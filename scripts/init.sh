@@ -7,7 +7,7 @@ echo "########## Installing Docker..."
 sudo apt-get remove docker docker-engine docker.io
 echo '* libraries/restart-without-asking boolean true' | sudo debconf-set-selections
 sudo apt-get install apt-transport-https ca-certificates curl software-properties-common -y
-sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg |  sudo apt-key add -
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo apt-key fingerprint 0EBFCD88
 sudo add-apt-repository \
       "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
@@ -22,7 +22,7 @@ sudo usermod -aG docker vagrant
 sudo docker --version
 
 # Packages required for nomad & consul
-sudo apt-get install unzip curl vim -y
+sudo apt-get install unzip vim -y
 
 echo "########## Installing Nomad..."
 NOMAD_VERSION=1.1.3
