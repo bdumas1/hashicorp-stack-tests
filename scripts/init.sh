@@ -46,3 +46,6 @@ echo "########## Enable CNI Plugin"
 curl -sSL https://github.com/containernetworking/plugins/releases/download/v${CNI_PLUGINS_VERSION}/cni-plugins-linux-amd64-v${CNI_PLUGINS_VERSION}.tgz -o cni-plugins.tgz
 sudo mkdir -p /opt/cni/bin
 sudo tar -C /opt/cni/bin -xzf cni-plugins.tgz
+
+echo "########## Cleanup"
+sudo rm -f /tmp/*.zip /tmp/*.tgz
